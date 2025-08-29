@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブロック崩しゲーム - 設定画面</title>
+    <!-- Material UI CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        
+        .settings-container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .game-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .game-subtitle {
+            font-size: 1.1rem;
+            color: #666;
+            margin-bottom: 40px;
+        }
+        
+        .setting-group {
+            margin-bottom: 35px;
+            text-align: left;
+        }
+        
+        .setting-label {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .slider-container {
+            position: relative;
+            margin-bottom: 15px;
+        }
+        
+        .slider {
+            width: 100%;
+            height: 8px;
+            border-radius: 4px;
+            background: #e0e0e0;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+        
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        .slider::-moz-range-thumb {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #667eea;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+        }
+        
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 8px;
+        }
+        
+        .preview-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #667eea;
+            background: #f5f5ff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        
+        .start-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            font-size: 1.3rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+        }
+        
+        .start-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(102, 126, 234, 0.4);
+        }
+        
+        .start-button:active {
+            transform: translateY(0);
+        }
+        
+        .material-icons {
+            font-size: 1.5rem;
+        }
+        
+        .difficulty-indicator {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .easy { color: #4caf50; }
+        .normal { color: #ff9800; }
+        .hard { color: #f44336; }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <h1 class="game-title">
+            <span class="material-icons">sports_esports</span>
+            ブロック崩し
+        </h1>
+        <p class="game-subtitle">ポップで楽しいゲーム体験をお楽しみください！</p>
+        
+        <div class="setting-group">
+            <label class="setting-label">
+                <span class="material-icons">height</span>
+                ブロックとパドルの距離
+            </label>
+            <div class="slider-container">
+                <input type="range" id="distanceSlider" class="slider" min="50" max="200" value="100">
+                <div class="slider-labels">
+                    <span>近い（簡単）</span>
+                    <span>遠い（難しい）</span>
+                </div>
+            </div>
+            <div class="preview-value" id="distanceValue">標準: 100px</div>
+        </div>
+        
+        <div class="setting-group">
+            <label class="setting-label">
+                <span class="material-icons">speed</span>
+                ボール速度
+            </label>
+            <div class="slider-container">
+                <input type="range" id="speedSlider" class="slider" min="1" max="5" value="3" step="0.5">
+                <div class="slider-labels">
+                    <span>ゆっくり（簡単）</span>
+                    <span>速い（難しい）</span>
+                </div>
+            </div>
+            <div class="preview-value" id="speedValue">標準: 3.0</div>
+        </div>
+        
+        <div class="difficulty-indicator">
+            <span class="easy">やさしい</span>
+            <span class="normal">ふつう</span>
+            <span class="hard">難しい</span>
+        </div>
+        
+        <button class="start-button" onclick="startGame()">
+            <span class="material-icons">play_arrow</span>
+            ゲーム開始
+        </button>
+    </div>
+
+    <script>
+        // スライダーの値をリアルタイムで更新
+        const distanceSlider = document.getElementById('distanceSlider');
+        const speedSlider = document.getElementById('speedSlider');
+        const distanceValue = document.getElementById('distanceValue');
+        const speedValue = document.getElementById('speedValue');
+        
+        function updateDistanceValue() {
+            const value = distanceSlider.value;
+            let difficulty;
+            if (value <= 80) difficulty = 'やさしい';
+            else if (value <= 120) difficulty = '標準';
+            else difficulty = '難しい';
+            distanceValue.textContent = `${difficulty}: ${value}px`;
+        }
+        
+        function updateSpeedValue() {
+            const value = parseFloat(speedSlider.value);
+            let difficulty;
+            if (value <= 2) difficulty = 'ゆっくり';
+            else if (value <= 3.5) difficulty = '標準';
+            else difficulty = '高速';
+            speedValue.textContent = `${difficulty}: ${value}`;
+        }
+        
+        distanceSlider.addEventListener('input', updateDistanceValue);
+        speedSlider.addEventListener('input', updateSpeedValue);
+        
+        function startGame() {
+            // 設定値を保存
+            const settings = {
+                paddleBlockDistance: parseInt(distanceSlider.value),
+                ballSpeed: parseFloat(speedSlider.value)
+            };
+            
+            // ローカルストレージに保存
+            localStorage.setItem('gameSettings', JSON.stringify(settings));
+            
+            // ゲーム画面へ遷移（実際の実装では適切なルーティング）
+            alert('ゲーム開始！設定が保存されました。\\n距離: ' + settings.paddleBlockDistance + 'px\\n速度: ' + settings.ballSpeed);
+            // window.location.href = '/game'; // 実装時
+        }
+        
+        // ページ読み込み時に保存された設定があれば復元
+        window.addEventListener('load', function() {
+            const savedSettings = localStorage.getItem('gameSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                distanceSlider.value = settings.paddleBlockDistance;
+                speedSlider.value = settings.ballSpeed;
+                updateDistanceValue();
+                updateSpeedValue();
+            }
+        });
+    </script>
+</body>
+</html>

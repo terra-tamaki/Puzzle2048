@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブロック崩しゲーム - プレイ画面</title>
+    <!-- Material UI CDN -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            padding: 20px;
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            padding: 0 20px;
+        }
+        
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #3498db;
+        }
+        
+        .lives-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .heart {
+            color: #e74c3c;
+            font-size: 1.8rem;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        .control-btn.pause {
+            background: rgba(241, 196, 15, 0.2);
+            border-color: #f1c40f;
+            color: #f1c40f;
+        }
+        
+        .game-area {
+            background: #1a1a2e;
+            border: 4px solid #16213e;
+            border-radius: 15px;
+            width: 800px;
+            height: 600px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.3);
+        }
+        
+        .blocks-container {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: grid;
+            grid-template-columns: repeat(8, 80px);
+            grid-template-rows: repeat(5, 30px);
+            gap: 5px;
+        }
+        
+        .block {
+            border-radius: 5px;
+            border: 2px solid rgba(255,255,255,0.2);
+            box-shadow: inset 0 2px 4px rgba(255,255,255,0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .block.row-1 { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+        .block.row-2 { background: linear-gradient(135deg, #f39c12, #e67e22); }
+        .block.row-3 { background: linear-gradient(135deg, #f1c40f, #f39c12); }
+        .block.row-4 { background: linear-gradient(135deg, #27ae60, #2ecc71); }
+        .block.row-5 { background: linear-gradient(135deg, #3498db, #2980b9); }
+        
+        .ball {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, #ffffff, #3498db);
+            box-shadow: 0 0 15px rgba(52, 152, 219, 0.6);
+            left: 390px;
+            top: 450px;
+            transition: all 0.016s linear;
+        }
+        
+        .paddle {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 15px;
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(155, 89, 182, 0.5);
+            transition: left 0.1s ease;
+        }
+        
+        .game-instructions {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1rem;
+        }
+        
+        .start-message {
+            background: rgba(46, 204, 113, 0.9);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .level-indicator {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            font-size: 1.1rem;
+            color: #3498db;
+            font-weight: 600;
+        }
+        
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 10;
+        }
+        
+        .pause-message {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f1c40f;
+            margin-bottom: 20px;
+        }
+        
+        .resume-btn {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="game-header">
+        <div class="score-display">
+            <span class="material-icons">stars</span>
+            <span id="score">0</span>
+        </div>
+        
+        <div class="lives-display">
+            <div id="livesContainer">
+                <span class="material-icons heart">favorite</span>
+                <span class="material-icons heart">favorite</span>
+                <span class="material-icons heart">favorite</span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="control-btn pause" onclick="togglePause()" id="pauseBtn">
+                <span class="material-icons">pause</span>
+            </button>
+            <button class="control-btn" onclick="goToSettings()">
+                <span class="material-icons">settings</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="game-area" id="gameArea">
+        <div class="level-indicator">LEVEL 1</div>
+        
+        <div class="blocks-container">
+            <!-- 5行8列のブロック -->
+            <div class="block row-1"></div><div class="block row-1"></div><div class="block row-1"></div><div class="block row-1"></div>
+            <div class="block row-1"></div><div class="block row-1"></div><div class="block row-1"></div><div class="block row-1"></div>
+            
+            <div class="block row-2"></div><div class="block row-2"></div><div class="block row-2"></div><div class="block row-2"></div>
+            <div class="block row-2"></div><div class="block row-2"></div><div class="block row-2"></div><div class="block row-2"></div>
+            
+            <div class="block row-3"></div><div class="block row-3"></div><div class="block row-3"></div><div class="block row-3"></div>
+            <div class="block row-3"></div><div class="block row-3"></div><div class="block row-3"></div><div class="block row-3"></div>
+            
+            <div class="block row-4"></div><div class="block row-4"></div><div class="block row-4"></div><div class="block row-4"></div>
+            <div class="block row-4"></div><div class="block row-4"></div><div class="block row-4"></div><div class="block row-4"></div>
+            
+            <div class="block row-5"></div><div class="block row-5"></div><div class="block row-5"></div><div class="block row-5"></div>
+            <div class="block row-5"></div><div class="block row-5"></div><div class="block row-5"></div><div class="block row-5"></div>
+        </div>
+        
+        <div class="ball" id="ball"></div>
+        <div class="paddle" id="paddle"></div>
+        
+        <div class="game-instructions" id="instructions">
+            <div class="start-message">SPACEキーまたはクリックでゲーム開始</div>
+            <p>← → キーまたはマウス移動でパドルを操作</p>
+        </div>
+        
+        <div class="pause-overlay" id="pauseOverlay">
+            <div class="pause-message">ゲーム一時停止中</div>
+            <button class="resume-btn" onclick="togglePause()">
+                <span class="material-icons">play_arrow</span>
+                再開
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // ゲーム状態
+        let gameState = {
+            score: 0,
+            lives: 3,
+            isPaused: false,
+            isGameStarted: false,
+            ball: { x: 390, y: 450, vx: 3, vy: -3 },
+            paddle: { x: 340, width: 120 },
+            blocks: []
+        };
+        
+        // 保存された設定の読み込み
+        const savedSettings = localStorage.getItem('gameSettings');
+        let gameSettings = { paddleBlockDistance: 100, ballSpeed: 3 };
+        if (savedSettings) {
+            gameSettings = JSON.parse(savedSettings);
+        }
+        
+        // ブロックの初期化
+        function initBlocks() {
+            const blockElements = document.querySelectorAll('.block');
+            gameState.blocks = Array.from(blockElements).map((el, index) => ({
+                element: el,
+                destroyed: false,
+                row: Math.floor(index / 8) + 1,
+                col: index % 8
+            }));
+        }
+        
+        // スコア更新
+        function updateScore(points) {
+            gameState.score += points;
+            document.getElementById('score').textContent = gameState.score;
+        }
+        
+        // ライフ更新
+        function updateLives() {
+            const livesContainer = document.getElementById('livesContainer');
+            livesContainer.innerHTML = '';
+            for (let i = 0; i < gameState.lives; i++) {
+                const heart = document.createElement('span');
+                heart.className = 'material-icons heart';
+                heart.textContent = 'favorite';
+                livesContainer.appendChild(heart);
+            }
+        }
+        
+        // 一時停止トグル
+        function togglePause() {
+            gameState.isPaused = !gameState.isPaused;
+            const pauseOverlay = document.getElementById('pauseOverlay');
+            const pauseBtn = document.getElementById('pauseBtn');
+            
+            if (gameState.isPaused) {
+                pauseOverlay.style.display = 'flex';
+                pauseBtn.innerHTML = '<span class="material-icons">play_arrow</span>';
+            } else {
+                pauseOverlay.style.display = 'none';
+                pauseBtn.innerHTML = '<span class="material-icons">pause</span>';
+            }
+        }
+        
+        // 設定画面に戻る
+        function goToSettings() {
+            if (confirm('ゲームを終了して設定画面に戻りますか？')) {
+                // window.location.href = '/'; // 実装時
+                alert('設定画面に戻ります');
+            }
+        }
+        
+        // ゲーム開始
+        function startGame() {
+            gameState.isGameStarted = true;
+            document.getElementById('instructions').style.display = 'none';
+            
+            // 設定に基づいてボール速度を調整
+            const speedMultiplier = gameSettings.ballSpeed / 3;
+            gameState.ball.vx *= speedMultiplier;
+            gameState.ball.vy *= speedMultiplier;
+            
+            // ブロックとパドルの距離を設定に基づいて調整
+            // （実装時はブロック配置を動的に調整）
+            
+            alert('ゲーム開始！\\n設定: 距離=' + gameSettings.paddleBlockDistance + 'px, 速度=' + gameSettings.ballSpeed);
+        }
+        
+        // マウス移動でパドル操作
+        document.addEventListener('mousemove', function(e) {
+            if (!gameState.isGameStarted || gameState.isPaused) return;
+            
+            const gameArea = document.getElementById('gameArea');
+            const paddle = document.getElementById('paddle');
+            const rect = gameArea.getBoundingClientRect();
+            
+            let mouseX = e.clientX - rect.left;
+            mouseX = Math.max(60, Math.min(mouseX, 740)); // パドルが画面外に出ないよう制限
+            
+            paddle.style.left = (mouseX - 60) + 'px';
+            gameState.paddle.x = mouseX - 60;
+        });
+        
+        // キーボード操作
+        document.addEventListener('keydown', function(e) {
+            if (e.code === 'Space' && !gameState.isGameStarted) {
+                e.preventDefault();
+                startGame();
+            }
+            if (e.code === 'Escape') {
+                togglePause();
+            }
+        });
+        
+        // ブロック破壊エフェクト（デモ用）
+        document.querySelectorAll('.block').forEach((block, index) => {
+            block.addEventListener('click', function() {
+                if (!gameState.blocks[index].destroyed) {
+                    this.style.opacity = '0';
+                    this.style.transform = 'scale(0.8)';
+                    gameState.blocks[index].destroyed = true;
+                    updateScore(10 * gameState.blocks[index].row);
+                }
+            });
+        });
+        
+        // 初期化
+        window.addEventListener('load', function() {
+            initBlocks();
+            updateLives();
+        });
+    </script>
+</body>
+</html>
