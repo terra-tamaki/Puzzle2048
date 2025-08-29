@@ -385,22 +385,11 @@ class GameEngine {
         
         this.ball = new Ball(ballX, ballY, ballRadius, ballSpeed, -ballSpeed);
         
-        // パドル作成（キャンバス下部の固定位置）
+        // パドル作成（キャンバス下部の安全な位置）
         const paddleWidth = 120;
         const paddleHeight = 15;
         const paddleX = (this.width - paddleWidth) / 2;
-        
-        // シンプルで確実なパドル位置計算
-        // キャンバス下端から50px上の位置に固定配置
-        const paddleY = this.height - 50; // 600 - 50 = 550px
-        
-        // デバッグ情報をコンソール出力
-        console.log('=== パドル位置計算デバッグ ===');
-        console.log(`キャンバスサイズ: ${this.width} x ${this.height}`);
-        console.log(`パドルサイズ: ${paddleWidth} x ${paddleHeight}`);
-        console.log(`パドル位置: (${paddleX}, ${paddleY})`);
-        console.log(`設定距離: ${this.settings.paddleBlockDistance}`);
-        console.log('================================');
+        const paddleY = this.height - 50; // キャンバス下端から50px上
         
         this.paddle = new Paddle(paddleX, paddleY, paddleWidth, paddleHeight, ballSpeed);
         
