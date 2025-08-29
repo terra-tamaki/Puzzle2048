@@ -389,14 +389,24 @@ class GameEngine {
         const paddleWidth = 120;
         const paddleHeight = 15;
         const paddleX = (this.width - paddleWidth) / 2;
-        const paddleY = this.height - 50;
         
-        // ブロックとパドルの距離を設定値に基づいて調整
-        const blockAreaBottom = 80 + (5 * (30 + 5)); // ブロック領域の下端
-        const requiredDistance = this.settings.paddleBlockDistance || 100;
-        const adjustedPaddleY = Math.min(paddleY, blockAreaBottom + requiredDistance);
+        // ブロックとパドルの距離設定を取得（50-200の範囲で制限）
+        const requiredDistance = Math.max(50, Math.min(200, this.settings.paddleBlockDistance || 100));
         
-        this.paddle = new Paddle(paddleX, adjustedPaddleY, paddleWidth, paddleHeight, ballSpeed);
+        // ブロック領域の下端を計算
+        const blockAreaBottom = 80 + (5 * (30 + 5)); // 255px
+        
+        // パドルのY位置を計算（ブロック下端 + 設定距離）
+        let paddleY = blockAreaBottom + requiredDistance;
+        
+        // キャンバス下端からの最小距離を確保（30px）
+        const minDistanceFromBottom = 30;
+        const maxAllowedY = this.height - paddleHeight - minDistanceFromBottom; // 600-15-30 = 555px
+        
+        // 最終的なY位置を決定（上限と下限を適用）
+        paddleY = Math.max(blockAreaBottom + 50, Math.min(paddleY, maxAllowedY));
+        
+        this.paddle = new Paddle(paddleX, paddleY, paddleWidth, paddleHeight, ballSpeed);
         
         // ブロック作成
         this.createBlocks();
