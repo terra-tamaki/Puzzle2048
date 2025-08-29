@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブロック崩しゲーム - 設定画面</title>
+    
+    <!-- Google Fonts & Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- 共通スタイル -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card fade-in">
+            <header class="text-center mb-30">
+                <h1 class="title">
+                    <span class="material-icons icon-xl">sports_esports</span>
+                    ブロック崩し
+                </h1>
+                <p class="subtitle">ポップで楽しいゲーム体験をお楽しみください！</p>
+            </header>
+            
+            <main>
+                <form id="settingsForm" class="settings-form">
+                    <!-- 距離設定 -->
+                    <div class="form-group slide-in">
+                        <label for="distanceSlider" class="form-label">
+                            <span class="material-icons">height</span>
+                            ブロックとパドルの距離
+                        </label>
+                        <div class="slider-container">
+                            <input 
+                                type="range" 
+                                id="distanceSlider" 
+                                class="slider" 
+                                min="50" 
+                                max="200" 
+                                value="100"
+                                step="10"
+                            >
+                            <div class="slider-labels">
+                                <span>近い（簡単）</span>
+                                <span>遠い（難しい）</span>
+                            </div>
+                        </div>
+                        <div class="preview-value" id="distanceValue">標準: 100px</div>
+                    </div>
+                    
+                    <!-- 速度設定 -->
+                    <div class="form-group slide-in">
+                        <label for="speedSlider" class="form-label">
+                            <span class="material-icons">speed</span>
+                            ボール速度
+                        </label>
+                        <div class="slider-container">
+                            <input 
+                                type="range" 
+                                id="speedSlider" 
+                                class="slider" 
+                                min="1" 
+                                max="5" 
+                                value="3" 
+                                step="0.5"
+                            >
+                            <div class="slider-labels">
+                                <span>ゆっくり（簡単）</span>
+                                <span>速い（難しい）</span>
+                            </div>
+                        </div>
+                        <div class="preview-value" id="speedValue">標準: 3.0</div>
+                    </div>
+                    
+                    <!-- 難易度インジケーター -->
+                    <div class="difficulty-indicator">
+                        <span class="difficulty-easy">やさしい</span>
+                        <span class="difficulty-normal">ふつう</span>
+                        <span class="difficulty-hard">難しい</span>
+                    </div>
+                    
+                    <!-- ゲーム開始ボタン -->
+                    <div class="text-center mt-30">
+                        <button type="submit" class="btn btn-primary pulse" id="startButton">
+                            <span class="material-icons">play_arrow</span>
+                            ゲーム開始
+                        </button>
+                    </div>
+                </form>
+            </main>
+            
+            <!-- 設定リセットボタン -->
+            <footer class="text-center mt-20">
+                <button type="button" class="btn btn-outline" id="resetButton">
+                    <span class="material-icons">refresh</span>
+                    設定をリセット
+                </button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/common.js"></script>
+    <script src="js/settings.js"></script>
+</body>
+</html>

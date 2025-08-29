@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブロック崩しゲーム - プレイ画面</title>
+    
+    <!-- Google Fonts & Material Icons -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    
+    <!-- 共通スタイル -->
+    <link rel="stylesheet" href="css/styles.css">
+    
+    <!-- ゲーム画面専用スタイル -->
+    <style>
+        body {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        .game-container {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: white;
+        }
+        
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 20px;
+            padding: 0 20px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            padding: 15px 25px;
+        }
+        
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #3498db;
+        }
+        
+        .lives-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .heart {
+            color: #e74c3c;
+            font-size: 1.8rem;
+            animation: pulse 2s infinite;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .control-btn {
+            background: rgba(255,255,255,0.2);
+            border: 2px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 48px;
+            min-height: 48px;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255,255,255,0.3);
+            transform: scale(1.1);
+        }
+        
+        .control-btn.pause {
+            background: rgba(241, 196, 15, 0.2);
+            border-color: #f1c40f;
+            color: #f1c40f;
+        }
+        
+        .game-canvas-container {
+            position: relative;
+            background: #1a1a2e;
+            border: 4px solid #16213e;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(52, 152, 219, 0.3);
+        }
+        
+        #gameCanvas {
+            display: block;
+            cursor: none;
+        }
+        
+        .game-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 10;
+        }
+        
+        .overlay-content {
+            background: rgba(0,0,0,0.8);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            color: white;
+            backdrop-filter: blur(10px);
+        }
+        
+        .overlay-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .overlay-message {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .overlay-button {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 25px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 0 auto;
+            transition: all 0.3s ease;
+        }
+        
+        .overlay-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(39, 174, 96, 0.4);
+        }
+        
+        .level-indicator {
+            position: absolute;
+            top: 15px;
+            left: 20px;
+            font-size: 1.2rem;
+            color: #3498db;
+            font-weight: 600;
+            z-index: 5;
+        }
+        
+        .fps-counter {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.6);
+            font-family: monospace;
+            z-index: 5;
+        }
+        
+        @media (max-width: 768px) {
+            .game-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .game-canvas-container {
+                width: 90vw;
+                height: 60vh;
+            }
+            
+            #gameCanvas {
+                width: 100%;
+                height: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- ゲームヘッダー -->
+        <div class="game-header fade-in">
+            <div class="score-display">
+                <span class="material-icons">stars</span>
+                <span id="scoreValue">0</span>
+            </div>
+            
+            <div class="lives-display">
+                <div id="livesContainer">
+                    <span class="material-icons heart">favorite</span>
+                    <span class="material-icons heart">favorite</span>
+                    <span class="material-icons heart">favorite</span>
+                </div>
+            </div>
+            
+            <div class="controls">
+                <button class="control-btn pause" id="pauseBtn" title="一時停止 (ESC)">
+                    <span class="material-icons">pause</span>
+                </button>
+                <button class="control-btn" id="settingsBtn" title="設定画面へ">
+                    <span class="material-icons">settings</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- ゲームキャンバス -->
+        <div class="game-canvas-container slide-in">
+            <canvas id="gameCanvas" width="800" height="600"></canvas>
+            
+            <!-- レベル表示 -->
+            <div class="level-indicator" id="levelIndicator">LEVEL 1</div>
+            
+            <!-- FPS表示 -->
+            <div class="fps-counter" id="fpsCounter">FPS: --</div>
+            
+            <!-- ゲーム開始オーバーレイ -->
+            <div class="game-overlay" id="startOverlay">
+                <div class="overlay-content">
+                    <div class="overlay-title">
+                        <span class="material-icons icon-xl">sports_esports</span>
+                        準備完了
+                    </div>
+                    <div class="overlay-message">
+                        <p><strong>SPACE</strong>キーまたは<strong>クリック</strong>でゲーム開始</p>
+                        <p><strong>←→</strong>キーまたは<strong>マウス</strong>でパドル操作</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 一時停止オーバーレイ -->
+            <div class="game-overlay" id="pauseOverlay">
+                <div class="overlay-content">
+                    <div class="overlay-title">
+                        <span class="material-icons icon-xl">pause_circle</span>
+                        一時停止中
+                    </div>
+                    <div class="overlay-message">
+                        ゲームを再開しますか？
+                    </div>
+                    <button class="overlay-button" id="resumeBtn">
+                        <span class="material-icons">play_arrow</span>
+                        再開
+                    </button>
+                </div>
+            </div>
+            
+            <!-- ゲームオーバーオーバーレイ -->
+            <div class="game-overlay" id="gameOverOverlay">
+                <div class="overlay-content">
+                    <div class="overlay-title" id="gameOverTitle">
+                        <span class="material-icons icon-xl">sentiment_dissatisfied</span>
+                        ゲームオーバー
+                    </div>
+                    <div class="overlay-message" id="gameOverMessage">
+                        最終スコア: <span id="finalScoreDisplay">0</span>
+                    </div>
+                    <button class="overlay-button" id="gameOverBtn">
+                        <span class="material-icons">assessment</span>
+                        結果を見る
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/common.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

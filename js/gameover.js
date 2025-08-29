@@ -137,30 +137,16 @@ class GameOverController {
             }
             
             // データの妥当性チェック
-            console.log('データ妥当性チェック前:', this.gameResult);
-            
             if (!this.gameResult.hasOwnProperty('blocksDestroyed') || this.gameResult.blocksDestroyed === null || this.gameResult.blocksDestroyed === undefined) {
-                console.error('blocksDestroyedプロパティが無効です:', this.gameResult.blocksDestroyed);
                 this.gameResult.blocksDestroyed = 18;
             }
             if (!this.gameResult.hasOwnProperty('totalBlocks') || this.gameResult.totalBlocks === null || this.gameResult.totalBlocks === undefined) {
-                console.error('totalBlocksプロパティが無効です:', this.gameResult.totalBlocks); 
                 this.gameResult.totalBlocks = 40;
             }
             
-            console.log('データ妥当性チェック後:', this.gameResult);
-            
             // 型変換を確実に実行
-            const beforeDestroyed = this.gameResult.blocksDestroyed;
-            const beforeTotal = this.gameResult.totalBlocks;
-            
             this.gameResult.blocksDestroyed = Number(this.gameResult.blocksDestroyed);
             this.gameResult.totalBlocks = Number(this.gameResult.totalBlocks);
-            
-            console.log(`型変換: destroyed ${beforeDestroyed} → ${this.gameResult.blocksDestroyed}`);
-            console.log(`型変換: total ${beforeTotal} → ${this.gameResult.totalBlocks}`);
-            console.log('最終的なゲーム結果:', this.gameResult);
-            console.log(`変換後の値 - 破壊: ${this.gameResult.blocksDestroyed} (${typeof this.gameResult.blocksDestroyed}), 総数: ${this.gameResult.totalBlocks} (${typeof this.gameResult.totalBlocks})`);
         } catch (error) {
             console.error('ゲーム結果の読み込みに失敗しました:', error);
             this.gameResult = this.getDefaultResult();
@@ -274,35 +260,16 @@ class GameOverController {
      * 統計セクションの更新
      */
     updateStatsSection() {
-        // 詳細デバッグ: 生の値を確認
-        console.log('=== updateStatsSection デバッグ ===');
-        console.log('生のゲーム結果データ:', this.gameResult);
-        console.log('blocksDestroyed生値:', this.gameResult.blocksDestroyed, typeof this.gameResult.blocksDestroyed);
-        console.log('totalBlocks生値:', this.gameResult.totalBlocks, typeof this.gameResult.totalBlocks);
-        
-        // 段階的な数値変換を確認
-        const destroyedRaw = this.gameResult.blocksDestroyed;
-        const totalRaw = this.gameResult.totalBlocks;
-        
-        console.log('Number()変換前 - destroyed:', destroyedRaw, 'total:', totalRaw);
-        
-        const destroyed = Number(destroyedRaw);
-        const total = Number(totalRaw);
-        
-        console.log('Number()変換後 - destroyed:', destroyed, 'total:', total);
-        console.log('isNaN確認 - destroyed:', isNaN(destroyed), 'total:', isNaN(total));
+        // 数値の安全な取得
+        const destroyed = Number(this.gameResult.blocksDestroyed) || 0;
+        const total = Number(this.gameResult.totalBlocks) || 40;
         
         // NaNの場合のフォールバック処理
         const finalDestroyed = isNaN(destroyed) ? 18 : destroyed;
         const finalTotal = isNaN(total) ? 40 : total;
         
-        console.log('最終値 - destroyed:', finalDestroyed, 'total:', finalTotal);
-        
         // 破壊率の正確な計算
         const percentage = finalTotal > 0 ? Math.round((finalDestroyed / finalTotal) * 100) : 0;
-        
-        console.log(`最終計算結果: ${finalDestroyed}/${finalTotal} = ${percentage}%`);
-        console.log('=== デバッグ終了 ===');
         
         // 表示更新
         this.playTimeValue.textContent = this.gameResult.playTime || '0:00';

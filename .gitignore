@@ -37,3 +37,11 @@ Thumbs.db
 /script/
 /scripts/
 /__tests__/
+
+# 開発用ディレクトリ（GitHub Pagesでは不要）
+frontend/
+backend/
+mockups/
+docs/
+.claude/
+.appgenius_temp/

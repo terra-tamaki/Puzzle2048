@@ -442,38 +442,5 @@
     <!-- JavaScript -->
     <script src="js/common.js"></script>
     <script src="js/gameover.js"></script>
-    
-    <!-- デバッグ用テストデータ設定 -->
-    <script>
-        // テスト用のゲーム結果データを設定
-        window.addEventListener('DOMContentLoaded', () => {
-            console.log('=== テストデータ設定開始 ===');
-            
-            // 既存データを確認
-            const existingData = localStorage.getItem('gameResult');
-            console.log('既存のゲーム結果データ:', existingData);
-            
-            // 明示的なテストデータでローカルストレージを設定
-            const testResult = {
-                isVictory: false,
-                finalScore: 720,
-                playTime: '3:20',
-                blocksDestroyed: 18,
-                totalBlocks: 40,
-                remainingLives: 0,
-                difficulty: '標準'
-            };
-            
-            // テストデータを保存
-            localStorage.setItem('gameResult', JSON.stringify(testResult));
-            console.log('テストデータを設定しました:', testResult);
-            
-            // 保存確認
-            const savedData = localStorage.getItem('gameResult');
-            console.log('保存確認:', savedData);
-            console.log('パース結果:', JSON.parse(savedData));
-            console.log('=== テストデータ設定完了 ===');
-        });
-    </script>
 </body>
 </html>
