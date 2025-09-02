@@ -1,22 +1,26 @@
 /**
- * ブロック崩しゲーム - 共通スタイル
- * Material Design風のポップなデザインテーマ
+ * Puzzle2048 共通スタイルシート
+ * 
+ * 美しいアニメーションとカラフルなデザインの2048パズルゲーム
+ * Material Design風の丸みのあるレスポンシブデザイン
  */
 
-/* === リセットとベーススタイル === */
+/* ===== 基本設定 ===== */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-html, body {
-    height: 100%;
-    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 16px;
-    line-height: 1.6;
+body {
+    font-family: 'Noto Sans JP', Arial, sans-serif;
+    background: linear-gradient(135deg, #a8e6a3 0%, #81c784 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
     color: #333;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     overflow-x: hidden;
 }
 

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle2048 - ゲーム結果</title>
+    <link rel="stylesheet" href="css/result-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 結果ヘッダー -->
+    <div class="result-header">
+        <h1 class="result-title"><span class="number-icon">2048</span> ゲーム結果 <span class="number-icon">2048</span></h1>
+        <div class="result-subtitle">お疲れさまでした！</div>
+    </div>
+
+    <!-- メイン結果表示 -->
+    <div class="result-main">
+        <!-- スコア結果 -->
+        <div class="score-results">
+            <div class="final-score">
+                <div class="score-label">スコア</div>
+                <div class="score-value" id="final-score">0</div>
+            </div>
+            
+            <div class="score-comparison">
+                <div class="score-item">
+                    <div class="score-label">前回スコア</div>
+                    <div class="score-value" id="previous-score">-</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-label">ベストスコア</div>
+                    <div class="score-value" id="best-score">0</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ゲーム統計 -->
+        <div class="game-stats">
+            <div class="stats-title">ゲーム統計</div>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <div class="stat-label">手数</div>
+                    <div class="stat-value" id="total-moves">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">合体回数</div>
+                    <div class="stat-value" id="merge-count">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">最高タイル</div>
+                    <div class="stat-value" id="max-tile">0</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">プレイ時間</div>
+                    <div class="stat-value" id="play-time">0:00</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">効率性</div>
+                    <div class="stat-value" id="efficiency">-%</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-label">状態</div>
+                    <div class="stat-value" id="final-status">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 改善アドバイス -->
+        <div class="advice-section">
+            <div class="advice-title">🎯 改善アドバイス</div>
+            <div class="advice-content" id="advice-content">
+                <div class="advice-item">計算中...</div>
+            </div>
+        </div>
+
+        <!-- アクションボタン -->
+        <div class="action-buttons">
+            <button class="action-btn primary" id="play-again">もう一度プレイ</button>
+            <button class="action-btn secondary" id="save-result">結果を保存</button>
+            <button class="action-btn secondary" id="share-result">結果をシェア</button>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/result-controller.js"></script>
+    <script>
+        // 結果表示初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            const resultController = new ResultController();
+            resultController.initialize();
+            
+            console.log('📊 結果画面が読み込まれました');
+        });
+    </script>
+</body>
+</html>

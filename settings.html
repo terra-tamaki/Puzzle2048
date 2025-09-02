@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puzzle2048 - 設定</title>
+    <link rel="stylesheet" href="css/settings-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 設定ヘッダー -->
+    <div class="settings-header">
+        <div class="game-title">🎮 Puzzle2048</div>
+        <h1 class="settings-title">⚙️ ゲーム設定</h1>
+    </div>
+
+    <!-- 設定メイン -->
+    <div class="settings-main">
+        <!-- 難易度設定 -->
+        <div class="settings-section">
+            <div class="section-title">🎯 難易度設定</div>
+            <div class="difficulty-grid">
+                <div class="difficulty-card" data-difficulty="easy">
+                    <div class="difficulty-icon">🟢</div>
+                    <div class="difficulty-name">Easy</div>
+                    <div class="difficulty-desc">4×4グリッド<br>初心者向け</div>
+                    <div class="difficulty-target">目標: 2048</div>
+                </div>
+                
+                <div class="difficulty-card" data-difficulty="normal">
+                    <div class="difficulty-icon">🟡</div>
+                    <div class="difficulty-name">Normal</div>
+                    <div class="difficulty-desc">5×5グリッド<br>中級者向け</div>
+                    <div class="difficulty-target">目標: 4096</div>
+                </div>
+                
+                <div class="difficulty-card" data-difficulty="hard">
+                    <div class="difficulty-icon">🟠</div>
+                    <div class="difficulty-name">Hard</div>
+                    <div class="difficulty-desc">6×6グリッド<br>上級者向け</div>
+                    <div class="difficulty-target">目標: 8192</div>
+                </div>
+                
+                <div class="difficulty-card" data-difficulty="expert">
+                    <div class="difficulty-icon">🔴</div>
+                    <div class="difficulty-name">Expert</div>
+                    <div class="difficulty-desc">8×8グリッド<br>エキスパート向け</div>
+                    <div class="difficulty-target">目標: 16384</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 音響設定 -->
+        <div class="settings-section">
+            <div class="section-title">🔊 音響設定</div>
+            <div class="audio-controls">
+                <div class="control-item">
+                    <label for="volume-slider">音量</label>
+                    <input type="range" id="volume-slider" min="0" max="100" value="70">
+                    <span id="volume-value">70%</span>
+                </div>
+                
+                <div class="control-item">
+                    <label for="mute-toggle">ミュート</label>
+                    <input type="checkbox" id="mute-toggle">
+                </div>
+                
+                <div class="control-item">
+                    <button id="test-sound" class="test-btn">音響テスト</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- アニメーション設定 -->
+        <div class="settings-section">
+            <div class="section-title">✨ アニメーション設定</div>
+            <div class="animation-controls">
+                <div class="control-item">
+                    <label for="animation-speed">アニメーション速度</label>
+                    <select id="animation-speed">
+                        <option value="1">遅い</option>
+                        <option value="2" selected>標準</option>
+                        <option value="3">速い</option>
+                    </select>
+                </div>
+                
+                <div class="control-item">
+                    <label for="particle-effects">パーティクルエフェクト</label>
+                    <input type="checkbox" id="particle-effects" checked>
+                </div>
+            </div>
+        </div>
+
+        <!-- ゲームプレイ設定 -->
+        <div class="settings-section">
+            <div class="section-title">🎮 ゲームプレイ設定</div>
+            <div class="gameplay-controls">
+                <div class="control-item">
+                    <label for="auto-save">自動セーブ</label>
+                    <input type="checkbox" id="auto-save" checked>
+                </div>
+                
+                <div class="control-item">
+                    <label for="show-debug">デバッグ情報表示</label>
+                    <input type="checkbox" id="show-debug">
+                </div>
+                
+                <div class="control-item">
+                    <label for="confirm-restart">リスタート確認</label>
+                    <input type="checkbox" id="confirm-restart" checked>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- アクションボタン -->
+    <div class="settings-actions">
+        <button class="action-btn primary" id="start-game">ゲーム開始</button>
+        <button class="action-btn secondary" id="reset-settings">設定リセット</button>
+        <button class="action-btn secondary" id="back-to-game">戻る</button>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/settings-controller.js"></script>
+    <script>
+        // 設定画面初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            const settingsController = new SettingsController();
+            settingsController.initialize();
+            
+            console.log('⚙️ 設定画面が読み込まれました');
+        });
+    </script>
+</body>
+</html>

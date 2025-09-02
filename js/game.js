@@ -711,7 +711,8 @@ class GameEngine {
      * 描画処理
      */
     render() {
-        // 背景クリア
+        // 背景クリア（最適化）
+        this.ctx.clearRect(0, 0, this.width, this.height);
         this.ctx.fillStyle = '#1a1a2e';
         this.ctx.fillRect(0, 0, this.width, this.height);
         

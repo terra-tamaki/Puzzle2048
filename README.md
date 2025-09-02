@@ -1,61 +1,89 @@
-# 🎮 ブロック崩しゲーム
+# 🎮 Puzzle2048
 
-HTML5 Canvasを使用したクラシックなブロック崩しゲームです。
-
-## 🌐 プレイ
-
-**GitHub Pages**: [https://terra-tamaki.github.io/brick-breaker-game/](https://terra-tamaki.github.io/brick-breaker-game/)
+美しいアニメーションとカラフルなデザインの2048パズルゲーム
 
 ## ✨ 機能
 
-- 🎯 **カスタム設定**: パドルとブロックの距離・ボール速度を調整可能
-- 🏆 **統計表示**: プレイ時間、ブロック破壊率、スコアの詳細表示
-- 🎨 **美しいUI**: Material Designアイコンとモダンなアニメーション
-- 📱 **レスポンシブ**: PC・タブレット・モバイル対応
-- 🎊 **勝利演出**: クリア時の紙吹雪エフェクト
-- ⌨️ **キーボード対応**: マウス・キーボード両方で操作可能
+- **4段階の難易度**: Easy(4×4) → Normal(5×5) → Hard(6×6) → Expert(8×8)
+- **美しいアニメーション**: 60FPS滑らかな移動・合体エフェクト
+- **音響システム**: タイル値に応じた音階制御
+- **振り返り機能**: 関西弁アドバイス付き結果画面
+- **レスポンシブデザイン**: PC・モバイル完全対応
+- **設定システム**: 音量・アニメーション・ゲームプレイ設定
 
-## 🕹️ 操作方法
+## 🎯 プレイ方法
 
-### ゲーム開始
-- **SPACEキー** または **マウスクリック**
+### 基本操作
+- **矢印キー**: タイル移動
+- **R**: リスタート
+- **ESC**: 一時停止
+- **M**: ミュート切り替え
+- **⚙️ボタン**: 設定画面
 
-### パドル操作
-- **←→キー** または **マウス移動**
+### ゲームルール
+1. 矢印キーでタイルを移動
+2. 同じ数字のタイルを合体させて大きな数字を作る
+3. 目標タイル（難易度別: 2048/4096/8192/16384）を目指す
+4. グリッドが埋まって移動できなくなるとゲームオーバー
 
-### その他
-- **ESCキー**: 一時停止
-- **ENTERキー**: ゲームオーバー画面で再プレイ
+## 🚀 デプロイメント
 
-## 🎯 ゲーム目標
-
-すべてのブロックを破壊してゲームクリアを目指しましょう！
-ライフは3つ。ボールを落とさないよう注意してください。
-
-## 🛠️ 技術仕様
-
-- **HTML5 Canvas**: ゲーム描画
-- **Vanilla JavaScript**: ゲームロジック
-- **CSS3**: アニメーション・レスポンシブデザイン  
-- **LocalStorage**: 設定・スコア保存
-- **Material Icons**: UIアイコン
-
-## 📱 対応環境
-
-- Chrome, Firefox, Safari, Edge (最新版)
-- Windows, macOS, Linux
-- iOS, Android (モバイルブラウザ)
-
-## 🚀 開発・デプロイ
-
+### GitHub Pages
 ```bash
-# ローカル開発サーバー
-python3 -m http.server 8080
-
-# ブラウザでアクセス
-http://localhost:8080
+git add .
+git commit -m "Deploy Puzzle2048"
+git push origin main
 ```
 
-## 📄 ライセンス
+### ローカル開発
+```bash
+python3 -m http.server 8000
+# http://localhost:8000 でアクセス
+```
 
-MIT License
+## 🏗️ 技術構成
+
+- **フロントエンド**: Vanilla JavaScript (ES6+)
+- **アニメーション**: CSS Animations + JavaScript制御
+- **音響**: Web Audio API
+- **デザイン**: Material Design風
+- **レスポンシブ**: CSS Grid + Flexbox
+
+## 📁 ファイル構成
+
+```
+/
+├── index.html          # メインゲーム画面
+├── settings.html       # 設定画面
+├── result.html         # 結果画面
+├── css/
+│   ├── puzzle2048-styles.css  # メインスタイル
+│   ├── settings-styles.css    # 設定画面スタイル
+│   └── result-styles.css      # 結果画面スタイル
+└── js/
+    ├── game-engine.js         # ゲームロジック
+    ├── ui-controller.js       # UI制御
+    ├── animation-controller.js # アニメーション制御
+    ├── audio-manager.js       # 音響管理
+    ├── settings-controller.js # 設定管理
+    └── result-controller.js   # 結果画面制御
+```
+
+## 🎓 学習目的
+
+BlueLamp学習プラットフォームの一環として、以下のスキル向上を目指します：
+- **集中力**: 論理的思考でタイル配置を計画
+- **戦略性**: 効率的な合体パターンの発見
+- **忍耐力**: 継続的なチャレンジ精神
+
+## 📊 統計・分析
+
+ゲーム終了後に以下の詳細分析を提供：
+- スコア効率性分析
+- プレイパターン評価
+- 改善アドバイス（関西弁）
+- 難易度別ランキング
+
+---
+
+**Generated with BlueLamp - 集中力と論理思考を鍛える学習プラットフォーム**

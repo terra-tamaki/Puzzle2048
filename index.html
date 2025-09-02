@@ -3,105 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ブロック崩しゲーム - 設定画面</title>
-    
-    <!-- Google Fonts & Material Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    
-    <!-- 共通スタイル -->
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Puzzle2048 - 美しいアニメーションの2048パズル</title>
+    <link rel="stylesheet" href="css/puzzle2048-styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="container">
-        <div class="card fade-in">
-            <header class="text-center mb-30">
-                <h1 class="title">
-                    <span class="material-icons icon-xl">sports_esports</span>
-                    ブロック崩し
-                </h1>
-                <p class="subtitle">ポップで楽しいゲーム体験をお楽しみください！</p>
-            </header>
-            
-            <main>
-                <form id="settingsForm" class="settings-form">
-                    <!-- 距離設定 -->
-                    <div class="form-group slide-in">
-                        <label for="distanceSlider" class="form-label">
-                            <span class="material-icons">height</span>
-                            ブロックとパドルの距離
-                        </label>
-                        <div class="slider-container">
-                            <input 
-                                type="range" 
-                                id="distanceSlider" 
-                                class="slider" 
-                                min="50" 
-                                max="200" 
-                                value="100"
-                                step="10"
-                            >
-                            <div class="slider-labels">
-                                <span>近い（簡単）</span>
-                                <span>遠い（難しい）</span>
-                            </div>
-                        </div>
-                        <div class="preview-value" id="distanceValue">標準: 100px</div>
-                    </div>
-                    
-                    <!-- 速度設定 -->
-                    <div class="form-group slide-in">
-                        <label for="speedSlider" class="form-label">
-                            <span class="material-icons">speed</span>
-                            ボール速度
-                        </label>
-                        <div class="slider-container">
-                            <input 
-                                type="range" 
-                                id="speedSlider" 
-                                class="slider" 
-                                min="1" 
-                                max="5" 
-                                value="3" 
-                                step="0.5"
-                            >
-                            <div class="slider-labels">
-                                <span>ゆっくり（簡単）</span>
-                                <span>速い（難しい）</span>
-                            </div>
-                        </div>
-                        <div class="preview-value" id="speedValue">標準: 3.0</div>
-                    </div>
-                    
-                    <!-- 難易度インジケーター -->
-                    <div class="difficulty-indicator">
-                        <span class="difficulty-easy">やさしい</span>
-                        <span class="difficulty-normal">ふつう</span>
-                        <span class="difficulty-hard">難しい</span>
-                    </div>
-                    
-                    <!-- ゲーム開始ボタン -->
-                    <div class="text-center mt-30">
-                        <button type="submit" class="btn btn-primary pulse" id="startButton">
-                            <span class="material-icons">play_arrow</span>
-                            ゲーム開始
-                        </button>
-                    </div>
-                </form>
-            </main>
-            
-            <!-- 設定リセットボタン -->
-            <footer class="text-center mt-20">
-                <button type="button" class="btn btn-outline" id="resetButton">
-                    <span class="material-icons">refresh</span>
-                    設定をリセット
-                </button>
-            </footer>
+    <!-- ゲームヘッダー -->
+    <div class="game-header">
+        <div class="score-section">
+            <div class="score-item">
+                <div class="score-label">スコア</div>
+                <div class="score-value" id="current-score">0</div>
+            </div>
+            <div class="score-item">
+                <div class="score-label">ベスト</div>
+                <div class="score-value" id="best-score">0</div>
+            </div>
+        </div>
+        <div class="header-buttons">
+            <button class="restart-btn" id="restart-button">リスタート</button>
+            <button class="settings-btn" id="settings-button">⚙️</button>
         </div>
     </div>
 
+    <!-- ゲームコンテナ -->
+    <div class="game-container">
+        <div class="game-grid" id="game-grid">
+            <!-- 空のグリッドセル -->
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+            <div class="grid-cell"></div>
+        </div>
+
+        <!-- ゲームオーバーレイ（勝利・敗北時） -->
+        <div class="game-overlay" id="game-overlay">
+            <div class="overlay-message" id="overlay-message">🎉 2048達成！</div>
+            <div class="overlay-submessage" id="overlay-submessage">継続しますか？</div>
+            <div class="overlay-buttons">
+                <button class="overlay-btn primary" id="continue-button">継続</button>
+                <button class="overlay-btn secondary" id="restart-from-overlay">リスタート</button>
+                <button class="overlay-btn secondary" id="view-result">結果を見る</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 操作ガイド -->
+    <div class="controls-guide">
+        <div class="controls-title">操作方法</div>
+        <div class="controls-grid">
+            <div class="control-item">
+                <div class="control-key">↑↓←→</div>
+                <div class="control-desc">タイル移動</div>
+            </div>
+            <div class="control-item">
+                <div class="control-key">R</div>
+                <div class="control-desc">リスタート</div>
+            </div>
+            <div class="control-item">
+                <div class="control-key">ESC</div>
+                <div class="control-desc">一時停止</div>
+            </div>
+            <div class="control-item">
+                <div class="control-key">M</div>
+                <div class="control-desc">ミュート</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ゲーム統計表示（デバッグ用） -->
+    <div class="debug-info" id="debug-info" style="display: none;">
+        <div>手数: <span id="moves-count">0</span></div>
+        <div>合体回数: <span id="merge-count">0</span></div>
+        <div>最高タイル: <span id="max-tile">0</span></div>
+        <div>状態: <span id="game-status">playing</span></div>
+    </div>
+
     <!-- JavaScript -->
-    <script src="js/common.js"></script>
-    <script src="js/settings.js"></script>
+    <script src="js/game-engine.js"></script>
+    <script src="js/animation-controller.js"></script>
+    <script src="js/audio-manager.js"></script>
+    <script src="js/ui-controller.js"></script>
+    <script>
+        // 設定読み込みとゲーム初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            // URLパラメータまたは保存された設定を読み込み
+            const urlParams = new URLSearchParams(window.location.search);
+            let settings = {};
+            
+            try {
+                const savedSettings = localStorage.getItem('puzzle2048_settings');
+                settings = savedSettings ? JSON.parse(savedSettings) : {};
+            } catch (error) {
+                console.warn('設定読み込みエラー:', error);
+            }
+            
+            // URLパラメータで設定を上書き
+            const difficulty = urlParams.get('difficulty') || settings.difficulty || 'easy';
+            const volume = parseInt(urlParams.get('volume')) || settings.volume || 70;
+            const muted = urlParams.get('muted') === 'true' || settings.muted || false;
+            const animationSpeed = parseInt(urlParams.get('animationSpeed')) || settings.animationSpeed || 2;
+            const showDebug = urlParams.get('showDebug') === 'true' || settings.showDebug || false;
+            
+            // 難易度に応じたゲームエンジン初期化
+            const gameEngine = new GameEngine(difficulty);
+            const uiController = new UIController(gameEngine);
+            
+            // 設定を適用
+            uiController.audioManager.setVolume(volume / 100);
+            if (muted) uiController.audioManager.toggleMute();
+            uiController.animationController.setSpeed(animationSpeed);
+            
+            // デバッグ表示設定
+            if (showDebug) {
+                document.getElementById('debug-info').style.display = 'block';
+            }
+            
+            // 設定ボタンのイベントリスナー
+            document.getElementById('settings-button').addEventListener('click', () => {
+                window.location.href = 'settings.html';
+            });
+            
+            // デバッグモード（開発用）
+            window.game = gameEngine;
+            window.ui = uiController;
+            window.animations = uiController.animationController;
+            window.audio = uiController.audioManager;
+            
+            console.log(`🎮 Puzzle2048 ゲーム開始！ (難易度: ${difficulty})`);
+            console.log('矢印キーでタイルを移動してください');
+            console.log('F12: デバッグモード | M: ミュート切り替え | ⚙️: 設定');
+            console.log('音響システムは最初の操作で初期化されます');
+        });
+    </script>
 </body>
 </html>

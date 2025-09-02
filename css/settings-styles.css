@@ -1,0 +1,373 @@
+/**
+ * Puzzle2048 設定画面スタイルシート
+ * 
+ * 難易度選択、音響設定、アニメーション設定
+ * ユーザーフレンドリーな設定インターフェース
+ */
+
+/* ===== 基本設定 ===== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Noto Sans JP', Arial, sans-serif;
+    background: linear-gradient(135deg, #a8e6a3 0%, #81c784 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* ===== 設定ヘッダー ===== */
+.settings-header {
+    text-align: center;
+    margin-bottom: 40px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    max-width: 800px;
+    width: 100%;
+}
+
+.game-title {
+    font-size: 32px;
+    font-weight: 900;
+    color: #00b894;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0, 184, 148, 0.3);
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.settings-title {
+    font-size: 42px;
+    font-weight: 900;
+    color: #2d3436;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.settings-subtitle {
+    font-size: 18px;
+    color: #636e72;
+    font-weight: 700;
+}
+
+/* ===== 設定メインエリア ===== */
+.settings-main {
+    max-width: 800px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin-bottom: 40px;
+}
+
+/* ===== 設定セクション ===== */
+.settings-section {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 25px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+}
+
+.section-title {
+    font-size: 24px;
+    font-weight: 900;
+    color: #2d3436;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* ===== 難易度設定 ===== */
+.difficulty-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.difficulty-card {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border: 3px solid #dee2e6;
+    border-radius: 20px;
+    padding: 25px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.difficulty-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.difficulty-card.selected {
+    border-color: #00b894;
+    background: linear-gradient(135deg, #e8f8f5, #d1f2eb);
+    box-shadow: 0 8px 25px rgba(0, 184, 148, 0.3);
+}
+
+.difficulty-card.selected::before {
+    content: '✓';
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    color: #00b894;
+    font-size: 24px;
+    font-weight: 900;
+}
+
+.difficulty-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.difficulty-name {
+    font-size: 24px;
+    font-weight: 900;
+    color: #2d3436;
+    margin-bottom: 10px;
+}
+
+.difficulty-desc {
+    font-size: 14px;
+    color: #636e72;
+    margin-bottom: 10px;
+    line-height: 1.4;
+}
+
+.difficulty-target {
+    font-size: 12px;
+    color: #00b894;
+    font-weight: 700;
+    background: rgba(0, 184, 148, 0.1);
+    padding: 5px 10px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+/* ===== 音響設定 ===== */
+.audio-controls,
+.animation-controls,
+.gameplay-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 15px;
+    border: 2px solid #dee2e6;
+}
+
+.control-item label {
+    font-size: 16px;
+    font-weight: 700;
+    color: #495057;
+    flex: 1;
+}
+
+.control-item input[type="range"] {
+    flex: 2;
+    margin: 0 15px;
+}
+
+.control-item input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.control-item select {
+    padding: 8px 12px;
+    border: 2px solid #dee2e6;
+    border-radius: 10px;
+    background: white;
+    font-size: 14px;
+    font-weight: 600;
+    color: #495057;
+}
+
+.test-btn {
+    background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.test-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+}
+
+#volume-value {
+    font-weight: 700;
+    color: #495057;
+    min-width: 50px;
+    text-align: right;
+}
+
+/* ===== アクションボタン ===== */
+.settings-actions {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    max-width: 800px;
+    width: 100%;
+}
+
+.action-btn {
+    border: none;
+    padding: 15px 30px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: 900;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 150px;
+}
+
+.action-btn.primary {
+    background: linear-gradient(135deg, #00b894, #00cec9);
+    color: white;
+    box-shadow: 0 6px 20px rgba(0, 184, 148, 0.3);
+}
+
+.action-btn.secondary {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+    border: 2px solid #dee2e6;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.action-btn:hover {
+    transform: translateY(-3px);
+}
+
+.action-btn.primary:hover {
+    box-shadow: 0 8px 25px rgba(0, 184, 148, 0.4);
+}
+
+.action-btn.secondary:hover {
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+/* ===== レスポンシブ対応 ===== */
+@media (max-width: 768px) {
+    .settings-title {
+        font-size: 32px;
+    }
+    
+    .difficulty-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    
+    .difficulty-card {
+        padding: 20px;
+    }
+    
+    .difficulty-icon {
+        font-size: 36px;
+    }
+    
+    .difficulty-name {
+        font-size: 20px;
+    }
+    
+    .control-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    
+    .control-item input[type="range"] {
+        width: 100%;
+        margin: 0;
+    }
+    
+    .settings-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .action-btn {
+        width: 250px;
+    }
+}
+
+@media (max-width: 480px) {
+    .difficulty-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .settings-main {
+        gap: 20px;
+    }
+    
+    .settings-section {
+        padding: 20px;
+    }
+}
+
+/* ===== アニメーション ===== */
+.settings-appear {
+    animation: settings-fade-in 0.8s ease-out;
+}
+
+@keyframes settings-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.difficulty-pulse {
+    animation: difficulty-select 0.5s ease-out;
+}
+
+@keyframes difficulty-select {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+/* ===== ユーティリティ ===== */
+.text-center {
+    text-align: center;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.visible {
+    display: block !important;
+}
