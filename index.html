@@ -22,6 +22,7 @@
         </div>
         <div class="header-buttons">
             <button class="restart-btn" id="restart-button">リスタート</button>
+            <button class="demo-btn" id="demo-button">🤖 デモ</button>
             <button class="settings-btn" id="settings-button">⚙️</button>
         </div>
     </div>
@@ -83,6 +84,24 @@
         </div>
     </div>
 
+    <!-- デモコントロール（デモ実行中のみ表示） -->
+    <div class="demo-controls" id="demo-controls" style="display: none;">
+        <div class="demo-status">
+            <span id="demo-status">🤖 デモプレイ中...</span>
+            <span id="demo-moves">手数: 0</span>
+        </div>
+        <div class="demo-buttons">
+            <button class="demo-control-btn" id="demo-pause">⏸️</button>
+            <button class="demo-control-btn" id="demo-stop">⏹️</button>
+            <select class="demo-speed" id="demo-speed">
+                <option value="0.5">0.5倍速</option>
+                <option value="1" selected>標準</option>
+                <option value="2">2倍速</option>
+                <option value="3">3倍速</option>
+            </select>
+        </div>
+    </div>
+
     <!-- ゲーム統計表示（デバッグ用） -->
     <div class="debug-info" id="debug-info" style="display: none;">
         <div>手数: <span id="moves-count">0</span></div>
@@ -96,6 +115,7 @@
     <script src="js/animation-controller.js"></script>
     <script src="js/audio-manager.js"></script>
     <script src="js/ui-controller.js"></script>
+    <script src="js/demo-ai.js"></script>
     <script>
         // 設定読み込みとゲーム初期化
         document.addEventListener('DOMContentLoaded', function() {
@@ -142,9 +162,42 @@
             window.animations = uiController.animationController;
             window.audio = uiController.audioManager;
             
+            // デモAI初期化
+            window.demoAI = new DemoAI(gameEngine);
+            
+            // デモボタンイベント
+            document.getElementById('demo-button').addEventListener('click', function() {
+                if (window.demoAI.isRunning) {
+                    window.demoAI.stopDemo();
+                    this.textContent = '🤖 デモ';
+                    document.getElementById('demo-controls').style.display = 'none';
+                } else {
+                    window.demoAI.startDemo();
+                    this.textContent = '⏹️ 停止';
+                    document.getElementById('demo-controls').style.display = 'flex';
+                }
+            });
+            
+            // デモコントロールイベント
+            document.getElementById('demo-pause').addEventListener('click', function() {
+                window.demoAI.togglePause();
+                this.textContent = window.demoAI.isPaused ? '▶️' : '⏸️';
+            });
+            
+            document.getElementById('demo-stop').addEventListener('click', function() {
+                window.demoAI.stopDemo();
+                document.getElementById('demo-button').textContent = '🤖 デモ';
+                document.getElementById('demo-controls').style.display = 'none';
+            });
+            
+            document.getElementById('demo-speed').addEventListener('change', function() {
+                const speed = parseFloat(this.value);
+                window.demoAI.setSpeed(speed);
+            });
+            
             console.log(`🎮 Puzzle2048 ゲーム開始！ (難易度: ${difficulty})`);
             console.log('矢印キーでタイルを移動してください');
-            console.log('F12: デバッグモード | M: ミュート切り替え | ⚙️: 設定');
+            console.log('F12: デバッグモード | M: ミュート切り替え | ⚙️: 設定 | 🤖: デモプレイ');
             console.log('音響システムは最初の操作で初期化されます');
         });
     </script>

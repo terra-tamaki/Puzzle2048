@@ -109,9 +109,10 @@ class GameEngine {
     /**
      * 指定方向にタイルを移動
      * @param {string} direction - 移動方向 ('left', 'right', 'up', 'down')
+     * @param {boolean} updateUI - UIを更新するかどうか（デモモード用）
      * @returns {Object} 移動結果 { moved, scoreIncrease, mergeOccurred, mergedTiles }
      */
-    move(direction) {
+    move(direction, updateUI = true) {
         if (this.gameOver) {
             return { moved: false, scoreIncrease: 0, mergeOccurred: false, mergedTiles: [] };
         }
@@ -154,11 +155,15 @@ class GameEngine {
             // ベストスコア更新
             if (this.score > this.bestScore) {
                 this.bestScore = this.score;
-                localStorage.setItem('puzzle2048_best_score', this.bestScore.toString());
+                localStorage.setItem(`puzzle2048_best_score_${this.difficulty}`, this.bestScore.toString());
             }
 
-            // 新しいタイルを追加
-            this.addRandomTile();
+            // 新しいタイルを追加（デモモード時はUIなし）
+            if (updateUI) {
+                this.addRandomTile();
+            } else {
+                this.addRandomTileForDemo();
+            }
 
             // 勝利判定
             if (this.checkVictory()) {
@@ -571,6 +576,62 @@ class GameEngine {
             console.log(rowStr);
         }
         console.log(`Score: ${this.score}, Moves: ${this.moves}, Status: ${this.status}`);
+    }
+
+    /**
+     * デモモード用のランダムタイル追加（UIアニメーションなし）
+     */
+    addRandomTileForDemo() {
+        const emptyCells = [];
+        
+        // 空きマスを探す
+        for (let row = 0; row < this.gridSize; row++) {
+            for (let col = 0; col < this.gridSize; col++) {
+                if (this.grid[row][col] === null) {
+                    emptyCells.push({ row, col });
+                }
+            }
+        }
+
+        if (emptyCells.length === 0) {
+            return null;
+        }
+
+        // ランダムな空きマスを選択
+        const randomIndex = Math.floor(Math.random() * emptyCells.length);
+        const { row, col } = emptyCells[randomIndex];
+        
+        // 90%の確率で2、10%の確率で4を生成
+        const value = Math.random() < 0.9 ? 2 : 4;
+        
+        const tile = {
+            value: value,
+            row: row,
+            col: col,
+            isNew: false, // デモモードではアニメーションなし
+            justMerged: false,
+            id: `demo_tile_${Date.now()}_${Math.random()}`
+        };
+
+        this.grid[row][col] = tile;
+        this.updateMaxTile(value);
+        
+        return tile;
+    }
+
+    /**
+     * 勝利判定（targetTile到達）
+     */
+    hasWon() {
+        for (let row = 0; row < this.gridSize; row++) {
+            for (let col = 0; col < this.gridSize; col++) {
+                const tile = this.grid[row][col];
+                if (tile && tile.value >= this.targetTile) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
