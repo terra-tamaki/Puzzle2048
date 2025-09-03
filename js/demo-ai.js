@@ -96,11 +96,25 @@ class DemoAI {
 
             // 手を実行
             console.log(`🤖 手${this.moveCount + 1}: ${bestMove}を実行`);
-            const result = this.gameEngine.move(bestMove);
-            console.log('📈 移動結果:', result);
             
-            if (result.moved) {
+            // UIController経由で移動実行（画面更新付き）
+            if (window.ui && window.ui.handleKeyPress) {
+                const keyMap = {
+                    'left': 'ArrowLeft',
+                    'right': 'ArrowRight', 
+                    'up': 'ArrowUp',
+                    'down': 'ArrowDown'
+                };
+                
+                // キー押下をシミュレート
+                const keyEvent = new KeyboardEvent('keydown', {
+                    key: keyMap[bestMove],
+                    code: keyMap[bestMove]
+                });
+                
+                window.ui.handleKeyPress(keyEvent);
                 this.moveCount++;
+                this.lastMove = bestMove;
                 
                 // UI更新
                 this.updateDemoUI();
@@ -111,6 +125,10 @@ class DemoAI {
                     this.stopDemo();
                     break;
                 }
+            } else {
+                console.log('❌ UIController が見つかりません');
+                this.stopDemo();
+                break;
             }
 
             // 次の手まで待機
@@ -130,6 +148,31 @@ class DemoAI {
         const movesElement = document.getElementById('demo-moves');
         if (movesElement) {
             movesElement.textContent = `手数: ${this.moveCount}`;
+        }
+        
+        // 方向矢印のハイライト
+        this.highlightDirection(this.lastMove);
+    }
+
+    /**
+     * 選択された方向をハイライト表示
+     */
+    highlightDirection(direction) {
+        // 全ての矢印を非アクティブに
+        const arrows = document.querySelectorAll('.demo-arrow');
+        arrows.forEach(arrow => arrow.classList.remove('active'));
+        
+        // 選択された方向をアクティブに
+        if (direction) {
+            const arrowElement = document.getElementById(`demo-arrow-${direction}`);
+            if (arrowElement) {
+                arrowElement.classList.add('active');
+                
+                // 0.5秒後に非アクティブに
+                setTimeout(() => {
+                    arrowElement.classList.remove('active');
+                }, 500);
+            }
         }
     }
 
@@ -176,38 +219,155 @@ class DemoAI {
     }
 
     /**
-     * 指定した手が有効かどうかチェック
+     * 指定した手が有効かどうかチェック（修正版）
      */
     isValidMove(direction) {
-        // グリッドの現在状態を保存
-        const originalGrid = this.cloneGrid(this.gameEngine.grid);
+        // 現在のグリッドで実際に移動シミュレーション
+        const originalGrid = this.gameEngine.grid;
         
-        // 仮想的に手を実行
-        const testEngine = new GameEngine(this.gameEngine.difficulty);
-        testEngine.grid = this.cloneGrid(originalGrid);
-        testEngine.score = this.gameEngine.score;
-        
-        const result = testEngine.move(direction, false); // UIを更新せずに実行
-        
-        return result && result.moved;
+        // 方向別チェック
+        switch (direction) {
+            case 'left':
+                return this.canMoveLeft(originalGrid);
+            case 'right':
+                return this.canMoveRight(originalGrid);
+            case 'up':
+                return this.canMoveUp(originalGrid);
+            case 'down':
+                return this.canMoveDown(originalGrid);
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * 左移動が可能かチェック
+     */
+    canMoveLeft(grid) {
+        const size = grid.length;
+        for (let row = 0; row < size; row++) {
+            for (let col = 1; col < size; col++) {
+                const current = grid[row][col];
+                if (current) {
+                    // 左に空きがある、または同じ値のタイルがある
+                    for (let leftCol = col - 1; leftCol >= 0; leftCol--) {
+                        const leftTile = grid[row][leftCol];
+                        if (!leftTile) return true; // 空きマスがある
+                        if (leftTile.value === current.value && !leftTile.justMerged) return true; // 合体可能
+                        break; // 異なる値のタイルにぶつかった
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 右移動が可能かチェック
+     */
+    canMoveRight(grid) {
+        const size = grid.length;
+        for (let row = 0; row < size; row++) {
+            for (let col = size - 2; col >= 0; col--) {
+                const current = grid[row][col];
+                if (current) {
+                    // 右に空きがある、または同じ値のタイルがある
+                    for (let rightCol = col + 1; rightCol < size; rightCol++) {
+                        const rightTile = grid[row][rightCol];
+                        if (!rightTile) return true;
+                        if (rightTile.value === current.value && !rightTile.justMerged) return true;
+                        break;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 上移動が可能かチェック
+     */
+    canMoveUp(grid) {
+        const size = grid.length;
+        for (let col = 0; col < size; col++) {
+            for (let row = 1; row < size; row++) {
+                const current = grid[row][col];
+                if (current) {
+                    // 上に空きがある、または同じ値のタイルがある
+                    for (let upRow = row - 1; upRow >= 0; upRow--) {
+                        const upTile = grid[upRow][col];
+                        if (!upTile) return true;
+                        if (upTile.value === current.value && !upTile.justMerged) return true;
+                        break;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 下移動が可能かチェック
+     */
+    canMoveDown(grid) {
+        const size = grid.length;
+        for (let col = 0; col < size; col++) {
+            for (let row = size - 2; row >= 0; row--) {
+                const current = grid[row][col];
+                if (current) {
+                    // 下に空きがある、または同じ値のタイルがある
+                    for (let downRow = row + 1; downRow < size; downRow++) {
+                        const downTile = grid[downRow][col];
+                        if (!downTile) return true;
+                        if (downTile.value === current.value && !downTile.justMerged) return true;
+                        break;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
      * コーナー戦略での手選択（左下コーナーに大きなタイルを集約）
      */
     selectCornerStrategyMove(validMoves) {
-        // 優先順位: left > down > up > right
-        for (const preferredMove of this.preferredOrder) {
-            if (validMoves.includes(preferredMove)) {
-                // 追加評価: この手で危険な状況になるかチェック
-                if (!this.isDangerousMove(preferredMove)) {
-                    return preferredMove;
-                }
+        // 高度な評価: 各手の総合スコアを計算
+        let bestMove = null;
+        let bestScore = -Infinity;
+        
+        for (const move of validMoves) {
+            const evaluation = this.evaluateMove(move);
+            
+            // 総合スコア計算（重み付け）
+            let totalScore = 0;
+            
+            // コーナー戦略ボーナス
+            if (move === 'left') totalScore += 1000;
+            else if (move === 'down') totalScore += 800;
+            else if (move === 'up') totalScore += 200;
+            else if (move === 'right') totalScore -= 500;
+            
+            // 各評価指標を加算
+            totalScore += evaluation.scoreGain * 2;        // スコア重視
+            totalScore += evaluation.emptyTiles * 100;     // 空きマス重視
+            totalScore += evaluation.monotonicity * 50;    // 単調性
+            totalScore += evaluation.smoothness * 20;      // スムーズさ
+            
+            // 危険な手にペナルティ
+            if (this.isDangerousMove(move)) {
+                totalScore -= 2000;
+            }
+            
+            console.log(`📊 ${move}: ${totalScore}点 (スコア:${evaluation.scoreGain} 空き:${evaluation.emptyTiles})`);
+            
+            if (totalScore > bestScore) {
+                bestScore = totalScore;
+                bestMove = move;
             }
         }
         
-        // 全て危険な場合は、スコア最大化で選択
-        return this.selectBestScoreMove(validMoves);
+        return bestMove;
     }
 
     /**
@@ -262,7 +422,7 @@ class DemoAI {
     }
 
     /**
-     * 手の評価を行う
+     * 手の評価を行う（高度な評価関数）
      */
     evaluateMove(direction) {
         const originalGrid = this.cloneGrid(this.gameEngine.grid);
@@ -278,26 +438,115 @@ class DemoAI {
         // 評価指標を計算
         const scoreGain = testEngine.score - originalScore;
         const emptyTiles = this.countEmptyTiles(testEngine.grid);
-        const monotonicity = this.calculateMonotonicity(testEngine.grid);
+        const monotonicity = this.calculateAdvancedMonotonicity(testEngine.grid);
         const smoothness = this.calculateSmoothness(testEngine.grid);
+        const cornerWeight = this.calculateCornerWeight(testEngine.grid);
+        const maxTilePosition = this.evaluateMaxTilePosition(testEngine.grid);
         
         return {
             scoreGain,
             emptyTiles,
             monotonicity,
             smoothness,
-            overallScore: scoreGain * 0.4 + emptyTiles * 0.3 + monotonicity * 0.2 + smoothness * 0.1
+            cornerWeight,
+            maxTilePosition,
+            overallScore: scoreGain * 0.25 + emptyTiles * 0.25 + monotonicity * 0.2 + cornerWeight * 0.15 + maxTilePosition * 0.15
         };
     }
 
     /**
-     * 危険な手かどうか判定
+     * 高度な単調性評価（グラデーション評価）
+     */
+    calculateAdvancedMonotonicity(grid) {
+        let score = 0;
+        const size = grid.length;
+        
+        // 左上から右下へのグラデーション評価
+        for (let row = 0; row < size; row++) {
+            for (let col = 0; col < size; col++) {
+                const value = grid[row][col] ? grid[row][col].value : 0;
+                
+                // 位置による重み（左上が最重要）
+                const positionWeight = (size - row) + (size - col);
+                score += Math.log2(value + 1) * positionWeight;
+            }
+        }
+        
+        return score;
+    }
+
+    /**
+     * コーナー重み評価（左上・左下コーナーの重要性）
+     */
+    calculateCornerWeight(grid) {
+        const size = grid.length;
+        const topLeft = grid[0][0] ? grid[0][0].value : 0;
+        const bottomLeft = grid[size-1][0] ? grid[size-1][0].value : 0;
+        
+        // 最大タイルがコーナーにある場合の高評価
+        const maxTile = this.getMaxTileValue(grid);
+        
+        let score = 0;
+        if (topLeft === maxTile) score += 1000;
+        if (bottomLeft === maxTile) score += 800;
+        
+        return score;
+    }
+
+    /**
+     * 最大タイルの位置評価
+     */
+    evaluateMaxTilePosition(grid) {
+        const size = grid.length;
+        const maxTile = this.getMaxTileValue(grid);
+        
+        for (let row = 0; row < size; row++) {
+            for (let col = 0; col < size; col++) {
+                const tile = grid[row][col];
+                if (tile && tile.value === maxTile) {
+                    // 左端・上端ほど高評価
+                    return (size - col) * 100 + (size - row) * 50;
+                }
+            }
+        }
+        
+        return 0;
+    }
+
+    /**
+     * グリッドの最大タイル値を取得
+     */
+    getMaxTileValue(grid) {
+        let maxValue = 0;
+        for (let row = 0; row < grid.length; row++) {
+            for (let col = 0; col < grid[0].length; col++) {
+                const tile = grid[row][col];
+                if (tile && tile.value > maxValue) {
+                    maxValue = tile.value;
+                }
+            }
+        }
+        return maxValue;
+    }
+
+    /**
+     * 危険な手かどうか判定（改良版）
      */
     isDangerousMove(direction) {
         const evaluation = this.evaluateMove(direction);
         
-        // 空きマスが2個以下になる手は危険とみなす
-        return evaluation.emptyTiles <= 2;
+        // より厳格な危険判定
+        if (evaluation.emptyTiles <= 3) return true;
+        
+        // 最大タイルがコーナーから離れる手は危険
+        const originalGrid = this.cloneGrid(this.gameEngine.grid);
+        const maxTile = this.getMaxTileValue(originalGrid);
+        if (maxTile >= 512) { // 高いタイルがある場合の慎重判定
+            if (direction === 'right') return true;
+            if (maxTile >= 1024 && direction === 'up') return true;
+        }
+        
+        return false;
     }
 
     /**

@@ -29,6 +29,14 @@
 
     <!-- ゲームコンテナ -->
     <div class="game-container">
+        <!-- デモ方向表示 -->
+        <div class="demo-direction-indicators" id="demo-direction-indicators" style="display: none;">
+            <div class="demo-arrow demo-arrow-up" id="demo-arrow-up">↑</div>
+            <div class="demo-arrow demo-arrow-left" id="demo-arrow-left">←</div>
+            <div class="demo-arrow demo-arrow-right" id="demo-arrow-right">→</div>
+            <div class="demo-arrow demo-arrow-down" id="demo-arrow-down">↓</div>
+        </div>
+        
         <div class="game-grid" id="game-grid">
             <!-- 空のグリッドセル -->
             <div class="grid-cell"></div>
@@ -171,10 +179,12 @@
                     window.demoAI.stopDemo();
                     this.textContent = '🤖 デモ';
                     document.getElementById('demo-controls').style.display = 'none';
+                    document.getElementById('demo-direction-indicators').style.display = 'none';
                 } else {
                     window.demoAI.startDemo();
                     this.textContent = '⏹️ 停止';
                     document.getElementById('demo-controls').style.display = 'flex';
+                    document.getElementById('demo-direction-indicators').style.display = 'block';
                 }
             });
             
@@ -188,6 +198,7 @@
                 window.demoAI.stopDemo();
                 document.getElementById('demo-button').textContent = '🤖 デモ';
                 document.getElementById('demo-controls').style.display = 'none';
+                document.getElementById('demo-direction-indicators').style.display = 'none';
             });
             
             document.getElementById('demo-speed').addEventListener('change', function() {
